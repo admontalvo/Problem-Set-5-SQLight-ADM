@@ -1,0 +1,76 @@
+BSC4452/6541 Computational Tools in Biology Problem Set 5 SQLight / SQLAlchemy Question # 1-3 
+
+#Question 1 What is the country with the latest year (most recent) of independence?
+
+cd /blue/bsc4452/admontalvo # changing directory to where world.sqlite file is
+module load sqlite #loading sqlite
+sqlite3 world.sqlite #changing sqlite typing pane and accessing world.sqlite database
+PRAGMA foreign_keys=ON; #setting up constrints
+.database #verifying that the database is loaded
+.tables #seeing the different tables in the database
+.schema #visually inspect the tables
+.schema country #looks at the data in the country table
+Question1 Identify the youngest (most recent) country that has gained independence in the country datatable 
+
+Answer = Palau, year of independence= 1994
+
+
+Code to obtain answer
+#obtaining the independence year and name of country from country table
+from the years 1900 onward and ordering from the countries with the youngest years of independence.
+sqlite> SELECT Name, IndepYear FROM country WHERE IndepYear > 1900 ORDER BY IndepYear DESC LIMIT 10;
+
+Output 
+Palau|1994
+Czech Republic|1993
+Eritrea|1993
+Slovakia|1993
+Bosnia and Herzegovina|1992
+Armenia|1991
+Azerbaijan|1991
+Belarus|1991
+Estonia|1991
+Georgia|1991
+
+
+#Question2 with reference to this webpage : https://www.statista.com/chart/11430/the-worlds-youngest-countries/
+#Add information to sqlite database regarding new countries that have obtained independence.
+
+#Choose Kosovo as the country to insert data to the table
+
+#In parenthesis after 'country' are the columns to add the data and after VALUES are the distint values to add 
+INSERT INTO 'country'(Code, Name, Continent, Region, SurfaceArea, IndepYear, Population, 
+LifeExpectancy, GNP, GNPOld, LocalName, GovernmentForm, HeadOfState, Capital)VALUES (5629549, 'Kosovao', 'Europe', 'Muslim', 10887, 2006, 1806279, 69.0, 
+7.87, 8.38, 'Dardania', 'Unitary parliamentary republic', 'Vjosa Osmani', 'Pristina');  
+
+
+#Code Verifying that the values were inserted
+sqlite> SELECT Name, Code, Name, Continent, Region, SurfaceArea, IndepYear, Population, LifeExpectancy,
+GNP, GNPOld, LocalName, GovernmentForm, HeadOfState, Capital FROM country WHERE IndepYear > 2000;
+
+#Output:
+Kosovao|5629549|Kosovao|Europe|Muslim|10887.0|2006|1806279|69.0|7.87|8.38|Dardania|Unitary parliamentary republic|Vjosa Osmani|Pristina
+
+Question 3
+For the country added in question 2, find 2 cities to add to the cities table of the database and provide the SQL or SQLAlchemy insert statement to add this data.
+Attempting to insert two rows (two cities with one line of code)
+
+#Looking at the table
+.schema city
+
+INSERT INTO 'city'(Name, CountryCode, District, Population) VALUES ('Pristina', 'ABC', 'District of Pristina', 198897), ('Gjakova', 'CBA', 'District of Gjakova', 40827);
+
+#Verifying Error no such column (Name) found
+sqlite> SELECT Name, CountryCode, District, Population from city WHERE Name = 'Pristina';
+
+#Output:
+Pristina||District of Pristina|198897
+Pristina|ABC|District of Pristina|198897
+Pristina||District of Pristina|198897
+Pristina||District of Pristina|198897
+
+sqlite> SELECT Name, CountryCode, District, Population from city WHERE Name = 'Gjakova';
+#Output:
+Gjakova|CBA|District of Gjakova|40827
+Gjakova||District of Gjakova|40827
+Gjakova||District of Gjakova|40827
